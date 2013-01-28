@@ -156,6 +156,7 @@ func (c *conn) writeCommand(cmd string, args []interface{}) (err error) {
 			err = c.writeBytes(buf.Bytes())
 		}
 	}
+    log.Println("Error writing command to write buffer: ", err)
 	return err
 }
 
