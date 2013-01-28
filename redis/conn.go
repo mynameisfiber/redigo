@@ -24,6 +24,7 @@ import (
 	"strconv"
 	"sync"
 	"time"
+    "log"
 )
 
 // conn is the low-level implementation of Conn
@@ -281,6 +282,7 @@ func (c *conn) Do(cmd string, args ...interface{}) (interface{}, error) {
 	}
 
 	if err := c.bw.Flush(); err != nil {
+        log.Println("Error writing command in Do", err.Error())
 		return nil, c.fatal(err)
 	}
 
@@ -297,6 +299,7 @@ func (c *conn) Do(cmd string, args ...interface{}) (interface{}, error) {
 		reply := make([]interface{}, pending)
 		for i := range reply {
 			if r, e := c.readReply(); e != nil {
+                log.Println("Error reading connection reply: ", e.Error())
 				return nil, c.fatal(e)
 			} else {
 				reply[i] = r
@@ -310,6 +313,7 @@ func (c *conn) Do(cmd string, args ...interface{}) (interface{}, error) {
 	for i := 0; i <= pending; i++ {
 		var e error
 		if reply, e = c.readReply(); e != nil {
+            log.Println("Error reading connection reply: ", e.Error())
 			return nil, c.fatal(e)
 		}
 		if e, ok := reply.(Error); ok && err == nil {
