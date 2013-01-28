@@ -282,6 +282,9 @@ func (c *conn) Do(cmd string, args ...interface{}) (interface{}, error) {
 		c.writeCommand(cmd, args)
 	}
 
+    log.Println("Buffer size: ", c.bw.Buffered())
+    log.Println("Buffer avail: ", c.bw.Availible())
+
 	if err := c.bw.Flush(); err != nil {
         log.Println("Error writing command in Do", err.Error())
 		return nil, c.fatal(err)
